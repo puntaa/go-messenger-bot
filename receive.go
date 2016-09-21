@@ -25,13 +25,14 @@ type Entry struct {
 //
 //TODO: Create a way to identify the type of callback
 type Callback struct {
-	Sender    User          `json:"sender"`
-	Recipient Page          `json:"recipient"`
-	Timestamp int64         `json:"timestamp"`
-	Optin     InputOptin    `json:"optin"`
-	Message   InputMessage  `json:"message,omitempty"`
-	Postback  InputPostback `json:"postback,omitempty"`
-	Delivery  InputDelivery `json:"delivery,omitempty"`
+	Sender         User           `json:"sender"`
+	Recipient      Page           `json:"recipient"`
+	Timestamp      int64          `json:"timestamp"`
+	Optin          InputOptin     `json:"optin"`
+	Message        InputMessage   `json:"message,omitempty"`
+	Postback       InputPostback  `json:"postback,omitempty"`
+	Delivery       InputDelivery  `json:"delivery,omitempty"`
+	AccountLinking AccountLinking `json:"account_linking,omitempty"`
 }
 
 func (c Callback) IsMessage() bool {
@@ -44,6 +45,10 @@ func (c Callback) IsOptin() bool {
 
 func (c Callback) IsPostback() bool {
 	return !(c.Postback == (InputPostback{}))
+}
+
+func (c Callback) IsAccountLinking() bool {
+	return !(c.AccountLinking == (AccountLinking{}))
 }
 
 func (c Callback) IsDelivery() bool {
@@ -70,11 +75,12 @@ type InputOptin struct {
 // If text message only Text field exists
 // If media message Attachments fields contains an array of attachmensts sent
 type InputMessage struct {
-	MID         string            `json:"mid"`
-	Seq         int64             `json:"seq"`
-	Text        string            `json:"text"`
-	Attachments []InputAttachment `json:"attachments,omitempty"`
-	QuickReply  InputQRPayload    `json:"quick_reply,omitempty"`
+	MID            string            `json:"mid"`
+	Seq            int64             `json:"seq"`
+	Text           string            `json:"text"`
+	Attachments    []InputAttachment `json:"attachments,omitempty"`
+	QuickReply     InputQRPayload    `json:"quick_reply,omitempty"`
+	AccountLinking AccountLinking    `json:"account_linking,omitempty"`
 }
 
 //Represents a quick reply payload
@@ -110,4 +116,9 @@ type InputDelivery struct {
 // Represents a postback sent by clicking on Postback Button
 type InputPostback struct {
 	Payload string `json:"payload"`
+}
+
+type AccountLinking struct {
+	Status            string `json:"status"`
+	AuthorizationCode string `json:"authorization_code"`
 }
